@@ -11,7 +11,11 @@ export const typeDefs = `#graphql
             email: String!,
             password: String!
             bio: String
-        ): User,
+        ): SignupRes,
+    }
+
+    type SignupRes {
+    token: String
     }
 
     type Post {
