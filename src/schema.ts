@@ -11,10 +11,15 @@ export const typeDefs = `#graphql
             email: String!,
             password: String!
             bio: String
-        ): SignupRes,
+        ): AuthRes,
+        signin(
+            email: String!,
+            password: String!
+        ): AuthRes,
     }
 
-    type SignupRes {
+    type AuthRes {
+    userError: String
     token: String
     }
 

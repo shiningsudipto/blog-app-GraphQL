@@ -22,7 +22,35 @@ export const resolvers = {
         data: payload,
       });
       const token = jwtUtils.generateToken(newUser?.email, newUser?.id);
-      return { token };
+      return { userError: null, token };
+    },
+    signin: async (parent: any, args: any, context: any) => {
+      const user = await prisma.user.findUnique({
+        where: {
+          email: args?.email,
+        },
+      });
+      if (!user) {
+        return {
+          userError: "User not found!",
+          token: null,
+        };
+      }
+      const isPassCorrect = await bcrypt.compare(
+        args?.password,
+        user?.password
+      );
+      if (!isPassCorrect) {
+        return {
+          userError: "Password not matched!",
+          token: null,
+        };
+      } else {
+        return {
+          userError: null,
+          token: jwtUtils.generateToken(user?.email, user?.id),
+        };
+      }
     },
   },
 };
