@@ -3,3 +3,9 @@ export type TSignup = {
   email: string;
   password: string;
 };
+export type TDecodedUserInfo = {
+  email: string;
+  id: number;
+  iat: number;
+  exp: number;
+};
