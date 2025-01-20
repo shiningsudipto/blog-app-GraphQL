@@ -1,5 +1,5 @@
 export const postResolvers = {
-  addPost: async (parent: any, args: any, { prisma, userInfo }: any) => {
+  addPost: async (parent: any, { post }: any, { prisma, userInfo }: any) => {
     if (!userInfo) {
       return {
         error: "Unauthorized",
@@ -8,8 +8,8 @@ export const postResolvers = {
     }
     const newPost = await prisma.post.create({
       data: {
-        title: args.title,
-        content: args.content,
+        title: post.title,
+        content: post.content,
         authorId: userInfo.id,
       },
     });
