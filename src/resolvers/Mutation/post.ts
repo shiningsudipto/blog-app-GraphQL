@@ -1,3 +1,5 @@
+import { checkUserAccess } from "../../utils/checkUserAccess";
+
 export const postResolvers = {
   addPost: async (parent: any, { post }: any, { prisma, userInfo }: any) => {
     if (!userInfo) {
@@ -19,7 +21,6 @@ export const postResolvers = {
     };
   },
   updatePost: async (parent: any, args: any, { prisma, userInfo }: any) => {
-    console.log(args, userInfo);
     if (!userInfo) {
       return {
         error: "Unauthorized",
@@ -36,8 +37,33 @@ export const postResolvers = {
     console.log(updatedPost);
 
     return {
-      userError: null,
+      error: null,
       data: updatedPost,
+    };
+  },
+  deletePost: async (parent: any, args: any, { prisma, userInfo }: any) => {
+    console.log(args);
+    if (!userInfo) {
+      return {
+        error: "Unauthorized",
+        data: null,
+      };
+    }
+
+    const error = await checkUserAccess(prisma, userInfo.userId, args.postId);
+    if (error) {
+      return error;
+    }
+
+    const deletedPost = await prisma.post.delete({
+      where: {
+        id: Number(args.postId),
+      },
+    });
+
+    return {
+      error: null,
+      data: deletedPost,
     };
   },
 };
