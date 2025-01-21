@@ -5,7 +5,7 @@ export const checkUserAccess = async (
 ) => {
   const user = await prisma.user.findUnique({
     where: {
-      id: userId,
+      id: Number(userId),
     },
   });
 
